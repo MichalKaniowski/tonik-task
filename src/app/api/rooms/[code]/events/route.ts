@@ -5,20 +5,14 @@ import { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 
 export async function GET(request: NextRequest) {
-  console.log("SSE: New connection request");
   const { user } = await validateRequest();
-  
-  console.log("SSE: User:", user?.id);
-  
+
   if (!user) {
-    console.log("SSE: Unauthorized");
     return new Response("Unauthorized", { status: 401 });
   }
 
   const { searchParams } = new URL(request.url);
   const roomCode = searchParams.get("roomCode")?.toUpperCase();
-
-  console.log("SSE: Request for room:", roomCode);
 
   if (!roomCode) {
     return new Response("Room code required", { status: 400 });
@@ -49,7 +43,6 @@ export async function GET(request: NextRequest) {
 
       const updateRoom = async () => {
         try {
-          console.log("SSE: Fetching room:", roomCode, "at:", new Date().toISOString());
           const room = await (prisma as any).room.findUnique({
             where: { roomCode },
             include: {
@@ -73,18 +66,13 @@ export async function GET(request: NextRequest) {
           });
 
           if (!room) {
-            console.log("SSE: Room not found for code:", roomCode);
             return;
           }
 
-          console.log("SSE: Room found with status:", room.status, "players:", room.players.length);
-          
           const eventData = {
             type: "room_state",
             data: room,
           };
-          console.log("SSE: Sending event for players:", room.players.map((p: any) => p.user.username));
-          console.log("SSE: Event data length:", JSON.stringify(eventData).length);
           sendEvent(eventData);
         } catch (e) {
           console.error("SSE: Error fetching room:", e);
@@ -96,7 +84,6 @@ export async function GET(request: NextRequest) {
       intervals.push(updateInterval);
 
       request.signal.addEventListener("abort", () => {
-        console.log("SSE: Connection aborted");
         intervals.forEach(i => clearInterval(i));
         try {
           controller.close();

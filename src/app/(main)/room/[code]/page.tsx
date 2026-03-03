@@ -22,11 +22,9 @@ function RoomContent({ code }: { code: string }) {
 
   const fetchRoom = async () => {
     try {
-      console.log("Fetching room:", code);
       const response = await fetch(`/api/rooms/${code}`);
       if (response.ok) {
         const data = await response.json();
-        console.log("Room data loaded:", data);
         setInitialRoomData(data);
         setLoading(false);
       }
@@ -46,15 +44,14 @@ function RoomContent({ code }: { code: string }) {
     if (sseRoomData) {
       setRoomData(sseRoomData);
       setLoading(false);
-      
+
       if (sseRoomData.status === "FINISHED") {
         setGameEnded(true);
         setEndReason("Game ended");
       }
 
       const myPlayer = sseRoomData.players.find((p: any) => p.userId === user.id);
-      console.log("My player data:", myPlayer);
-      
+
       if (myPlayer?.isFinished) {
         setIsFinished(true);
       }

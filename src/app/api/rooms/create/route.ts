@@ -15,7 +15,6 @@ export async function POST() {
     }
 
     const roomCode = nanoid(6).toUpperCase();
-    console.log("Creating room for user:", user.id, "with code:", roomCode);
 
     const room = await (prisma as any).room.create({
       data: {
@@ -25,16 +24,12 @@ export async function POST() {
       },
     });
 
-    console.log("Room created successfully:", room);
-
     const roomPlayer = await (prisma as any).roomPlayer.create({
       data: {
         roomId: room.id,
         userId: user.id,
       },
     });
-
-    console.log("Creator added as player:", roomPlayer.id);
 
     return NextResponse.json({ roomCode: room.roomCode });
   } catch (error) {

@@ -30,27 +30,21 @@ export function useRoomEvents(roomCode: string) {
 
   useEffect(() => {
     if (!roomCode || roomCode.length === 0) {
-      console.log("SSE: No room code, skipping SSE connection");
       return;
     }
 
     const url = `/api/rooms/${roomCode}/events?roomCode=${roomCode}`;
-    console.log("SSE: Connecting to room events for:", roomCode, "URL:", url);
     const eventSource = new EventSource(url);
 
     eventSource.onopen = () => {
-      console.log("SSE: Connected to room events");
       setIsConnected(true);
     };
 
     const handleMessage = (event: any) => {
-      console.log("SSE: Received raw event:", event.data);
       try {
         const data = JSON.parse(event.data);
-        console.log("SSE: Parsed event type:", data.type, "data:", data);
-        
+
         if (data.type === "room_state" && data.data) {
-          console.log("SSE: Setting room data with", data.data.players?.length, "players");
           setRoomData(data.data);
         }
       } catch (e) {
@@ -67,12 +61,9 @@ export function useRoomEvents(roomCode: string) {
     };
 
     return () => {
-      console.log("SSE: Closing EventSource");
       eventSource.close();
     };
   }, [roomCode]);
-
-  console.log("SSE: Current state - roomData:", roomData, "isConnected:", isConnected);
 
   return { roomData, isConnected };
 }

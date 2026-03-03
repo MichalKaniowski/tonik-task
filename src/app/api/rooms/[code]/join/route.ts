@@ -19,7 +19,6 @@ export async function POST(request: Request, { params }: RouteContext) {
 
     const { code } = await params;
     const roomCode = code.toUpperCase();
-    console.log("Join request for room:", roomCode, "by user:", user.id);
 
     const room = await (prisma as any).room.findUnique({
       where: { roomCode },
@@ -27,14 +26,11 @@ export async function POST(request: Request, { params }: RouteContext) {
     });
 
     if (!room) {
-      console.log("Room not found:", roomCode);
       return NextResponse.json(
         { error: "Room not found" },
         { status: 404 }
       );
     }
-
-    console.log("Room found:", room.id, "status:", room.status, "players:", room.players.length);
 
     if (room.status !== "WAITING") {
       return NextResponse.json(
@@ -52,7 +48,6 @@ export async function POST(request: Request, { params }: RouteContext) {
 
     const existingPlayer = room.players.find((p: any) => p.userId === user.id);
     if (existingPlayer) {
-      console.log("User already in room");
       return NextResponse.json({ roomCode: room.roomCode });
     }
 
@@ -63,7 +58,6 @@ export async function POST(request: Request, { params }: RouteContext) {
       },
     });
 
-    console.log("Room player created:", roomPlayer.id);
     return NextResponse.json({ roomCode: room.roomCode });
   } catch (error) {
     console.error("Join room error:", error);

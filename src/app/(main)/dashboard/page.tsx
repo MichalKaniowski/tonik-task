@@ -37,7 +37,6 @@ export default function DashboardPage() {
       if (!response.ok) {
         setError(data.error || "Failed to join room");
       } else {
-        console.log("Redirecting to room:", roomCode);
         window.location.href = `/room/${roomCode}`;
       }
     } catch (err) {
@@ -60,7 +59,6 @@ export default function DashboardPage() {
       if (!response.ok) {
         setError(data.error || "Failed to create room");
       } else {
-        console.log("Redirecting to room:", data.roomCode);
         window.location.href = `/room/${data.roomCode}`;
       }
     } catch (err) {

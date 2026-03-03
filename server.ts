@@ -29,8 +29,6 @@ app.prepare().then(() => {
   });
 
   io.on("connection", (socket) => {
-    console.log("Client connected:", socket.id);
-
     socket.on("join_room", async ({ roomCode, userId }) => {
       try {
         const room = await prisma.room.findUnique({
@@ -121,9 +119,7 @@ app.prepare().then(() => {
       }
     });
 
-    socket.on("disconnect", () => {
-      console.log("Client disconnected:", socket.id);
-    });
+    socket.on("disconnect", () => {});
   });
 
   httpServer
@@ -131,7 +127,5 @@ app.prepare().then(() => {
       console.error(err);
       process.exit(1);
     })
-    .listen(port, () => {
-      console.log(`> Ready on http://${hostname}:${port}`);
-    });
+    .listen(port, () => {});
 });
