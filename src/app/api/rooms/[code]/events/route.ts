@@ -92,7 +92,7 @@ export async function GET(request: NextRequest) {
       };
 
       await updateRoom();
-      const updateInterval = setInterval(updateRoom, 2000);
+      const updateInterval = setInterval(updateRoom, 300);
       intervals.push(updateInterval);
 
       request.signal.addEventListener("abort", () => {
