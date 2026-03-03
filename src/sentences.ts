@@ -1,0 +1,22 @@
+export const sentences = [
+  "The quick brown fox jumps over the lazy dog.",
+  "A journey of a thousand miles begins with a single step.",
+  "To be or not to be that is the question.",
+  "All that glitters is not gold.",
+  "The early bird catches the worm.",
+  "Actions speak louder than words.",
+  "Knowledge is power.",
+  "Better late than never.",
+  "Time flies when you're having fun.",
+  "Practice makes perfect.",
+  "A picture is worth a thousand words.",
+  "Don't count your chickens before they hatch.",
+  "Every cloud has a silver lining.",
+  "Rome wasn't built in a day.",
+  "Where there's a will there's a way.",
+  "The only thing we have to fear is fear itself.",
+  "Ask not what your country can do for you.",
+  "I think therefore I am.",
+  "Life is what happens when you're busy making other plans.",
+  "In the end we only regret the chances we didn't take."
+];

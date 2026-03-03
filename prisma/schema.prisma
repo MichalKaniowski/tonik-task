@@ -13,6 +13,8 @@ model User {
   password  String
   createdAt DateTime @default(now())
   sessions  Session[]
+  ownedRooms Room[]   @relation("RoomOwner")
+  roomPlayers RoomPlayer[]
 }
 
 model Session {
@@ -20,4 +22,48 @@ model Session {
   userId    String
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Room {
+  id              String       @id @default(cuid())
+  roomCode        String       @unique
+  status          RoomStatus   @default(WAITING)
+  currentSentence String?
+  ownerId         String
+  owner           User         @relation("RoomOwner", fields: [ownerId], references: [id])
+  createdAt       DateTime     @default(now())
+  players         RoomPlayer[]
+  gameResult      GameResult?
+  
+  @@index([roomCode])
+}
+
+model RoomPlayer {
+  id          String   @id @default(cuid())
+  roomId      String
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  progress    Int      @default(0)
+  isFinished  Boolean  @default(false)
+  finishedAt  DateTime?
+  enteredText String   @default("")
+  
+  @@unique([roomId, userId])
+  @@index([roomId])
+}
+
+model GameResult {
+  id       String   @id @default(cuid())
+  roomId   String   @unique
+  room     Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  winnerId String?
+  endedAt  DateTime @default(now())
+  reason   String
+}
+
+enum RoomStatus {
+  WAITING
+  PLAYING
+  FINISHED
 }
